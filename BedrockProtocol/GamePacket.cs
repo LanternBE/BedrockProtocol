@@ -22,7 +22,7 @@ public class GamePacket : BedrockPacket {
         writer.WriteVarUInt((uint)PacketId | (uint)(SubClientId << SenderSubClientIdShift) | (uint)(SubTargetId << RecipientSubClientIdShift));
     }
 
-    protected internal override void ReadHeader(BinaryReader reader) {
+    public override void ReadHeader(BinaryReader reader) {
 
         var header = reader.ReadVarUInt();
         var packetId = (header & PidMask) | 128;

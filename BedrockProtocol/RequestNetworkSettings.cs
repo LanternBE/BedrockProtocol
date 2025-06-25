@@ -15,12 +15,14 @@ public class RequestNetworkSettings : BedrockPacket {
         writer.WriteByte((byte)PacketId);
     }
 
-    protected internal override void ReadHeader(BinaryReader reader) {
+    public override void ReadHeader(BinaryReader reader) {
         
         var packetId = reader.ReadByte();
         if (packetId != (int)PacketId) {
             throw new RakSharpException.InvalidPacketIdException((uint)PacketId, packetId, nameof(RequestNetworkSettings));
         }
+        
+        reader.ReadByte(); // This is the buffer after reading the PacketId: 01-00-00-03-32, idk whats 0x01, so im gonna skip it with this line:
     }
 
     protected override void WritePayload(BinaryWriter writer) {

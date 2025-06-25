@@ -9,7 +9,7 @@ public abstract class BedrockPacket {
     public abstract Info.BedrockPackets PacketId { get; }
 
     protected abstract void WriteHeader(BinaryWriter writer);
-    protected internal abstract void ReadHeader(BinaryReader reader);
+    public abstract void ReadHeader(BinaryReader reader);
     
     protected abstract void WritePayload(BinaryWriter writer);
     protected abstract void ReadPayload(BinaryReader reader);
