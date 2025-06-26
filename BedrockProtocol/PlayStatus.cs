@@ -1,16 +1,17 @@
 ﻿using BedrockProtocol.Types;
 using RakSharp;
+using RakSharp.Packet;
 using BinaryReader = RakSharp.Binary.BinaryReader;
 using BinaryWriter = RakSharp.Binary.BinaryWriter;
 
 namespace BedrockProtocol;
 
-public class RequestNetworkSettings : BedrockPacket {
+public class PlayStatus : BedrockPacket {
     
-    public override Info.BedrockPackets PacketId => Info.BedrockPackets.RequestNetworkSettings;
+    public override Info.BedrockPackets PacketId => Info.BedrockPackets.PlayStatus;
     public override Compression.Algorithm CompressionAlgorithm { get; set; }
 
-    public int ProtocolVersion { get; private set; }
+    public Types.PlayStatus State { get; private set; }
     
     protected override void WriteHeader(BinaryWriter writer) {
         
@@ -22,25 +23,25 @@ public class RequestNetworkSettings : BedrockPacket {
         
         var packetId = reader.ReadByte();
         if (packetId != (int)PacketId) {
-            throw new RakSharpException.InvalidPacketIdException((uint)PacketId, packetId, nameof(RequestNetworkSettings));
+            throw new RakSharpException.InvalidPacketIdException((uint)PacketId, packetId, nameof(PlayStatus));
         }
         
         CompressionAlgorithm = (Compression.Algorithm)reader.ReadByte();
     }
 
     protected override void WritePayload(BinaryWriter writer) {
-        writer.WriteIntBigEndian(ProtocolVersion);
+        writer.WriteIntBigEndian((int)State);
     }
 
     protected override void ReadPayload(BinaryReader reader) {
-        ProtocolVersion = reader.ReadIntBigEndian();
+        State = (Types.PlayStatus)reader.ReadIntBigEndian();
     }
     
-    public static (RequestNetworkSettings packet, byte[] buffer) Create(Compression.Algorithm compressionAlgorithm, int protocolVersion) {
+    public static (PlayStatus packet, byte[] buffer) Create(Compression.Algorithm compressionAlgorithm, Types.PlayStatus playStatus) {
         
-        return BedrockPacket.Create<RequestNetworkSettings>(packet => {
+        return BedrockPacket.Create<PlayStatus>(packet => {
             packet.CompressionAlgorithm = compressionAlgorithm;
-            packet.ProtocolVersion = protocolVersion;
+            packet.State = playStatus;
         });
     }
 }
