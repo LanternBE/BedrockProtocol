@@ -1,4 +1,5 @@
-﻿using BedrockProtocol.Types;
+﻿using System.IO.Compression;
+using BedrockProtocol.Types;
 using RakSharp;
 using BinaryReader = RakSharp.Binary.BinaryReader;
 using BinaryWriter = RakSharp.Binary.BinaryWriter;
@@ -8,6 +9,7 @@ namespace BedrockProtocol;
 public class GamePacket : BedrockPacket {
     
     public override Info.BedrockPackets PacketId => Info.BedrockPackets.GamePacket;
+    public override Compression.Algorithm CompressionAlgorithm { get; set; }
 
     public const int PidMask = 255;
     public const int SubClientIdMask = 3;

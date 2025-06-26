@@ -8,7 +8,8 @@ namespace BedrockProtocol;
 public class RequestNetworkSettings : BedrockPacket {
     
     public override Info.BedrockPackets PacketId => Info.BedrockPackets.RequestNetworkSettings;
-    
+    public override Compression.Algorithm CompressionAlgorithm { get; set; }
+
     public int ProtocolVersion { get; private set; }
     
     protected override void WriteHeader(BinaryWriter writer) {
@@ -22,7 +23,7 @@ public class RequestNetworkSettings : BedrockPacket {
             throw new RakSharpException.InvalidPacketIdException((uint)PacketId, packetId, nameof(RequestNetworkSettings));
         }
         
-        reader.ReadByte(); // This is the buffer after reading the PacketId: 01-00-00-03-32, idk whats 0x01, so im gonna skip it with this line:
+        CompressionAlgorithm = (Compression.Algorithm)reader.ReadByte();
     }
 
     protected override void WritePayload(BinaryWriter writer) {

@@ -7,6 +7,7 @@ namespace BedrockProtocol.Types;
 public abstract class BedrockPacket {
 
     public abstract Info.BedrockPackets PacketId { get; }
+    public abstract Compression.Algorithm CompressionAlgorithm { get; set; }
 
     protected abstract void WriteHeader(BinaryWriter writer);
     public abstract void ReadHeader(BinaryReader reader);
