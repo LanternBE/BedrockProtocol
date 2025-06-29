@@ -21,19 +21,22 @@ public class GamePacket : BedrockPacket {
     public byte[]? Payload { get; set; }
     
     protected override void WriteHeader(BinaryWriter writer) {
-        // Alternativa: scrivi direttamente il byte dell'ID del pacchetto
-        writer.WriteByte((byte)PacketId);
-        // Poi scrivi l'algoritmo di compressione
-        writer.WriteByte((byte)CompressionAlgorithm);
+        
+        var header = (uint)PacketId | (uint)(SubClientId << SenderSubClientIdShift) | (uint)(SubTargetId << RecipientSubClientIdShift);
+        writer.WriteVarIntSimple((int)header);
     }
 
     public override void ReadHeader(BinaryReader reader) {
-        var packetId = reader.ReadByte();
+
+        var header = reader.ReadVarUInt();
+        var packetId = (header & PidMask) | 128;
+
         if (packetId != (int)PacketId) {
-            throw new RakSharpException.InvalidPacketIdException((uint)PacketId, packetId, nameof(NetworkSettings));
+            throw new RakSharpException.InvalidPacketIdException((uint)PacketId, (int)packetId, nameof(GamePacket));
         }
-        
-        CompressionAlgorithm = (Compression.Algorithm)reader.ReadByte();
+
+        SubClientId = (int)((header >> SenderSubClientIdShift) & SubClientIdMask);
+        SubTargetId = (int)((header >> RecipientSubClientIdShift) & SubClientIdMask);
     }
 
     protected override void WritePayload(BinaryWriter writer) {
