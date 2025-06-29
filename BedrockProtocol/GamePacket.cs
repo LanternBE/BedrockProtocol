@@ -1,5 +1,4 @@
-﻿using System.IO.Compression;
-using BedrockProtocol.Types;
+﻿using BedrockProtocol.Types;
 using RakSharp;
 using BinaryReader = RakSharp.Binary.BinaryReader;
 using BinaryWriter = RakSharp.Binary.BinaryWriter;
@@ -22,8 +21,8 @@ public class GamePacket : BedrockPacket {
     
     protected override void WriteHeader(BinaryWriter writer) {
         
-        var header = (uint)PacketId | (uint)(SubClientId << SenderSubClientIdShift) | (uint)(SubTargetId << RecipientSubClientIdShift);
-        writer.WriteVarIntSimple((int)header);
+        var header = (int)PacketId | (SubClientId << SenderSubClientIdShift) | (SubTargetId << RecipientSubClientIdShift);
+        writer.WriteVarInt(header);
     }
 
     public override void ReadHeader(BinaryReader reader) {

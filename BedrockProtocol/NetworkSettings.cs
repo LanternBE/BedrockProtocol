@@ -17,19 +17,15 @@ public class NetworkSettings : BedrockPacket {
     public float ClientThrottleScalar { get; private set; }
     
     protected override void WriteHeader(BinaryWriter writer) {
-        
-        writer.WriteByte((byte)PacketId);
-        writer.WriteByte((byte)CompressionAlgorithm);
+        writer.WriteVarInt((byte)PacketId);
     }
 
     public override void ReadHeader(BinaryReader reader) {
         
-        var packetId = reader.ReadByte();
+        var packetId = reader.ReadVarInt();
         if (packetId != (int)PacketId) {
             throw new RakSharpException.InvalidPacketIdException((uint)PacketId, packetId, nameof(NetworkSettings));
         }
-        
-        CompressionAlgorithm = (Compression.Algorithm)reader.ReadByte();
     }
 
     protected override void WritePayload(BinaryWriter writer) {
