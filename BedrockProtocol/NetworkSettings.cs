@@ -46,7 +46,7 @@ public class NetworkSettings : BedrockPacket {
         ClientThrottleScalar = reader.ReadFloatLittleEndian();
     }
     
-    public static (NetworkSettings packet, byte[] buffer) Create(Compression.Algorithm compressionAlgorithm, ushort compressionThreshold = 512, ushort compressionAlgorithmMethod = 0, bool clientThrottleEnabled = false, byte clientThrottleThreshold = 0, float clientThrottleScalar = 0.0f) {
+    public static (NetworkSettings packet, byte[] buffer) Create(Compression.Algorithm compressionAlgorithm, ushort compressionThreshold = 0, ushort compressionAlgorithmMethod = 0, bool clientThrottleEnabled = false, byte clientThrottleThreshold = 0, float clientThrottleScalar = 0.0f) {
         
         return BedrockPacket.Create<NetworkSettings>(packet => {
             packet.CompressionAlgorithm = compressionAlgorithm;

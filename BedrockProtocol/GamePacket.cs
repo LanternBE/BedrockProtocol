@@ -22,7 +22,8 @@ public class GamePacket : BedrockPacket {
     protected override void WriteHeader(BinaryWriter writer) {
         
         var header = (int)PacketId | (SubClientId << SenderSubClientIdShift) | (SubTargetId << RecipientSubClientIdShift);
-        writer.WriteVarInt(header);
+        writer.WriteByte((byte)header);
+        writer.WriteByte((byte)(Payload?.Length ?? 0));
     }
 
     public override void ReadHeader(BinaryReader reader) {
