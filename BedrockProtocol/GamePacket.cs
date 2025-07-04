@@ -1,4 +1,4 @@
-﻿using BedrockProtocol.Types;
+using BedrockProtocol.Types;
 using RakSharp;
 using BinaryReader = RakSharp.Binary.BinaryReader;
 using BinaryWriter = RakSharp.Binary.BinaryWriter;
