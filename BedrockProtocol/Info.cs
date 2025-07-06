@@ -3,7 +3,8 @@ namespace BedrockProtocol;
 public static class Info {
     
     public static List<int> SupportedProtocols { get; } = [
-        818 // 1.21.92
+        818, // 1.21.92
+        819
     ];
 
     public enum BedrockPackets {
