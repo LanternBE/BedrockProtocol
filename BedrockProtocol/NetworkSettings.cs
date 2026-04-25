@@ -17,12 +17,12 @@ public class NetworkSettings : BedrockPacket {
     public float ClientThrottleScalar { get; private set; }
     
     protected override void WriteHeader(BinaryWriter writer) {
-        writer.WriteVarInt((byte)PacketId);
+        writer.WriteVarUInt((uint)PacketId);
     }
 
     public override void ReadHeader(BinaryReader reader) {
         
-        var packetId = reader.ReadVarInt();
+        var packetId = (int)reader.ReadVarUInt();
         if (packetId != (int)PacketId) {
             throw new RakSharpException.InvalidPacketIdException((uint)PacketId, packetId, nameof(NetworkSettings));
         }
