@@ -4,7 +4,8 @@ public static class Info {
     
     public static List<int> SupportedProtocols { get; } = [
         818, // 1.21.92
-        819
+        819,
+        944 // 26.13
     ];
 
     public enum BedrockPackets {
