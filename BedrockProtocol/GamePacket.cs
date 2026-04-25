@@ -20,16 +20,22 @@ public class GamePacket : BedrockPacket {
     public byte[]? Payload { get; set; }
     
     protected override void WriteHeader(BinaryWriter writer) {
-        
+        if (SubClientId is < 0 or > SubClientIdMask) {
+            throw new ArgumentOutOfRangeException(nameof(SubClientId), $"Value must be between 0 and {SubClientIdMask}.");
+        }
+
+        if (SubTargetId is < 0 or > SubClientIdMask) {
+            throw new ArgumentOutOfRangeException(nameof(SubTargetId), $"Value must be between 0 and {SubClientIdMask}.");
+        }
+
         var header = (int)PacketId | (SubClientId << SenderSubClientIdShift) | (SubTargetId << RecipientSubClientIdShift);
-        writer.WriteByte((byte)header);
-        writer.WriteByte((byte)(Payload?.Length ?? 0));
+        writer.WriteVarUInt((uint)header);
     }
 
     public override void ReadHeader(BinaryReader reader) {
 
         var header = reader.ReadVarUInt();
-        var packetId = (header & PidMask) | 128;
+        var packetId = header & PidMask;
 
         if (packetId != (int)PacketId) {
             throw new RakSharpException.InvalidPacketIdException((uint)PacketId, (int)packetId, nameof(GamePacket));

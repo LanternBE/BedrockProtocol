@@ -13,19 +13,15 @@ public class RequestNetworkSettings : BedrockPacket {
     public int ProtocolVersion { get; private set; }
     
     protected override void WriteHeader(BinaryWriter writer) {
-        
-        writer.WriteByte((byte)PacketId);
-        writer.WriteByte((byte)CompressionAlgorithm);
+        writer.WriteVarUInt((uint)PacketId);
     }
 
     public override void ReadHeader(BinaryReader reader) {
         
-        var packetId = reader.ReadByte();
+        var packetId = (int)reader.ReadVarUInt();
         if (packetId != (int)PacketId) {
             throw new RakSharpException.InvalidPacketIdException((uint)PacketId, packetId, nameof(RequestNetworkSettings));
         }
-        
-        CompressionAlgorithm = (Compression.Algorithm)reader.ReadByte();
     }
 
     protected override void WritePayload(BinaryWriter writer) {
